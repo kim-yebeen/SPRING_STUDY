@@ -4,9 +4,11 @@ import kr.kim.spring_mvc.domain.Board;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,7 +67,7 @@ public class BoardMemoryRepositoryTest {
     @Test
     public void deleteBoardByBoardNumTest(){
         // given : 삭제할 글을 아래에 변수로 저장해주세요.
-        final int BOARD_NUM = 2;// 2번글에 대한 조회를 할 예정임
+        final int BOARD_NUM = 3;// 2번글에 대한 조회를 할 예정임
 
         // when : 삭제 후에 전체 데이터의 개수를 .size()로 조회해 변수에 저장해주세요.
         //        그 다음, 이미 삭제된 글 번호로 또 삭제를 수행하고 결과를 변수에 저장해주세요.
@@ -74,12 +76,35 @@ public class BoardMemoryRepositoryTest {
         boolean deleteBool = boardRepository.deleteBoardByBoardNum(BOARD_NUM);
 
         // then : 단언문에서 데이터 개수를 단언해주시고, boolean결과도 단언해주세요.
-        assertEquals(2, boardListSize);
+        assertEquals(3, boardListSize);
         assertEquals(false, deleteBool);
     }
 
     // save 로직에 대해서 테스트코드를 임의로 작성해보세요.
+    @Test
+    @DisplayName("4번 글을 저장한 다음, 4번 글을 얻어오면 입력한 정보가 조회됨")
+    public void saveTest(){
+        //given
+        //글번호를 제외한 나머지를 미리 변수에 저장해 둡니다.
+        final String WRITTER ="손흥민광팬";
+        final LocalDateTime NOW = LocalDateTime.now();
+        final String CONTENT = "토트넘직관가야겠다";
+        final int BOARD_NUM = 4;
+        Board board =  new Board(BOARD_NUM, WRITTER,NOW,CONTENT);
 
+        //when : 구현해놓은 .save()가 실제로 동작하는지 검증
+        //저장로직을 돌린 다음, 실제로 저장되었는지 확인을 해야함
+        boardRepository.save(board);
+        Board result = boardRepository.findBoardByBoardNum(BOARD_NUM);
+        int boardListSize = boardRepository.getBoardList().size();
+
+
+        //then
+        //개수는 4개, 4번글을 가져왔을 때 위에 given에 정의한 데이터가 그대로 나와야 함.
+        assertEquals(4,boardListSize);
+        assertEquals(WRITTER, result.getWriter());
+        assertEquals(CONTENT, result.getContent());
+    }
 
 
 

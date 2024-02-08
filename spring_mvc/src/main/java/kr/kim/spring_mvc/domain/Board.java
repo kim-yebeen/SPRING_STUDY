@@ -14,7 +14,7 @@ public class Board {
     //한 줄 게시판에 필요한 정보들(글번호, 글쓴이, 날짜, 본문)
     private int boardNum;
     private String writer;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private String content;
 
 }
